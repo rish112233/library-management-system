@@ -209,6 +209,45 @@ button.danger {
   color: #6d79ff;
 }
 
+.chat-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #d8e2f3;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.chat-row {
+  max-width: 88%;
+  padding: 9px 10px;
+  border-radius: 10px;
+  line-height: 1.4;
+  font-size: 14px;
+}
+
+.chat-row.bot {
+  align-self: flex-start;
+  background: #eef3ff;
+  border: 1px solid #d0ddff;
+  color: #1e3b76;
+}
+
+.chat-row.user {
+  align-self: flex-end;
+  background: #efe9ff;
+  border: 1px solid #d7c8ff;
+  color: #3f2b7a;
+}
+
+.chat-form {
+  gap: 8px;
+}
+
 @keyframes pageIn {
   from {
     opacity: 0;
