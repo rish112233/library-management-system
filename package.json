@@ -1,0 +1,23 @@
+{
+  "name": "nexlib-lms-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NexLib — Academic Library Management System",
+  "scripts": {
+    "build": "npm --prefix frontend run build",
+    "test": "npm --prefix backend test",
+    "start": "npm --prefix backend start",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev"
+  },
+  "keywords": [
+    "library-management",
+    "mern",
+    "react",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "ISC"
+}

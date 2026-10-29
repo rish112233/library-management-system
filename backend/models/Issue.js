@@ -16,7 +16,28 @@ const issueSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    dueDate: {
+      type: Date,
+      default: () => new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
+    },
     returnDate: {
+      type: Date,
+      default: null,
+    },
+    fine: {
+      type: Number,
+      default: 0, // in rupees
+    },
+    status: {
+      type: String,
+      enum: ["active", "returned", "overdue"],
+      default: "active",
+    },
+    renewCount: {
+      type: Number,
+      default: 0,
+    },
+    lastRenewedDate: {
       type: Date,
       default: null,
     },

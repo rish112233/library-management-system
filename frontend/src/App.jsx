@@ -1,8 +1,14 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+import LandingPage from "./pages/LandingPage";
+import Catalog from "./pages/Catalog";
+import BookDetails from "./pages/BookDetails";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
+import Unauthorized from "./pages/Unauthorized";
+import NotFound from "./pages/NotFound";
 
 const getAuthState = () => {
   const token = localStorage.getItem("token");
@@ -15,6 +21,7 @@ const getHomeRoute = () => {
   return role === "admin" ? "/admin" : "/student";
 };
 
+// Route requiring authentication and optionally a specific role
 function ProtectedRoute({ children, role }) {
   const { token, role: userRole } = getAuthState();
 
@@ -23,13 +30,14 @@ function ProtectedRoute({ children, role }) {
   }
 
   if (role && userRole !== role) {
-    return <Navigate to={getHomeRoute()} replace />;
+    return <Navigate to="/unauthorized" replace />;
   }
 
   return children;
 }
 
-function PublicRoute({ children }) {
+// Route accessible only when NOT authenticated (login, register)
+function GuestOnlyRoute({ children }) {
   const { isLoggedIn } = getAuthState();
   if (isLoggedIn) {
     return <Navigate to={getHomeRoute()} replace />;
@@ -40,28 +48,48 @@ function PublicRoute({ children }) {
 function App() {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <PublicRoute>
-            <Login />
-          </PublicRoute>
-        }
-      />
+      {/* 1. Public Homepage */}
+      <Route path="/" element={<LandingPage />} />
+
+      {/* 2. Public Catalog & Dedicated Book Details */}
+      <Route path="/catalog" element={<Catalog />} />
+      <Route path="/books/:id" element={<BookDetails />} />
+
+      {/* 3. Guest Auth Routes */}
       <Route
         path="/login"
         element={
-          <PublicRoute>
+          <GuestOnlyRoute>
             <Login />
-          </PublicRoute>
+          </GuestOnlyRoute>
         }
       />
       <Route
         path="/register"
         element={
-          <PublicRoute>
+          <GuestOnlyRoute>
             <Register />
-          </PublicRoute>
+          </GuestOnlyRoute>
+        }
+      />
+
+      {/* 4. Authenticated Profile & Security */}
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 5. Role-Protected Portals */}
+      <Route
+        path="/student"
+        element={
+          <ProtectedRoute role="student">
+            <StudentDashboard />
+          </ProtectedRoute>
         }
       />
       <Route
@@ -72,24 +100,11 @@ function App() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/student"
-        element={
-          <ProtectedRoute role="student">
-            <StudentDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="*"
-        element={
-          getAuthState().isLoggedIn ? (
-            <Navigate to={getHomeRoute()} replace />
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
-      />
+
+      {/* 6. Error & Fallback States */}
+      <Route path="/unauthorized" element={<Unauthorized />} />
+      <Route path="/404" element={<NotFound />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
